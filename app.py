@@ -68,7 +68,6 @@ def home():
 """
 
 
-@app.post("/analyze",response_class=HTMLResponse)
 @app.post("/analyze", response_class=HTMLResponse)
 def analyze(url: str = Form(...)):
 
