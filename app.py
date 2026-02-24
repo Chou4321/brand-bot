@@ -69,35 +69,30 @@ def home():
 
 
 @app.post("/analyze",response_class=HTMLResponse)
-def analyze(url:str=Form(...)):
+@app.post("/analyze", response_class=HTMLResponse)
+def analyze(url: str = Form(...)):
 
-    domain=normalize_domain(url)
-
-    facebook,line=find_social(domain)
+    domain = normalize_domain(url)
+    facebook, line = find_social(domain)
 
     return f"""
-
 <h2>Brand Bot 結果</h2>
 
 Domain:
-
 {domain}
 
 <br><br>
 
 Facebook:
-
 {facebook}
 
 <br><br>
 
 LINE:
-
 {line}
 
 <br><br>
 
 <a href="/">再查一個</a>
 
-
-  
+"""
