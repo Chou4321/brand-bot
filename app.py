@@ -9,7 +9,6 @@ app = Flask(__name__, static_folder=".")
 CORS(app)
 
 api_key = os.environ.get("ANTHROPIC_API_KEY")
-client = anthropic.Anthropic(api_key=api_key)
 
 SYSTEM_PROMPT = """你是 Omnichat 的資深業務顧問，擅長針對不同產業、不同開發條件撰寫高轉換率的開發信。
 
@@ -71,7 +70,7 @@ def health():
 def analyze():
     if not api_key:
         return jsonify({"error": "ANTHROPIC_API_KEY 未設定"}), 500
-
+client = anthropic.Anthropic(api_key=api_key)
     data = request.json or {}
     brand_name = data.get("brandName", "")
     image_b64 = data.get("imageB64", "")
