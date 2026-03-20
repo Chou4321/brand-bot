@@ -1,5 +1,4 @@
-fastapi
-uvicorn
-requests
-beautifulsoup4
-python-multipart
+flask==3.0.3
+flask-cors==4.0.1
+anthropic==0.40.0
+gunicorn==22.0.0
