@@ -60,11 +60,8 @@ SYSTEM_PROMPT = """你是 Omnichat 的資深業務顧問，擅長針對不同產
 
 @app.route("/", methods=["GET"])
 def home():
-    # 若同資料夾有 index.html，就回傳前端頁面
-    index_path = os.path.join(app.static_folder, "index.html")
-    if os.path.exists(index_path):
-        return send_from_directory(app.static_folder, "index.html")
-    return "Omnichat Brand Scout API 運行中"
+return send_from_directory(".", "index.html")
+
 
 @app.route("/health", methods=["GET"])
 def health():
