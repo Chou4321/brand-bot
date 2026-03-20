@@ -60,7 +60,7 @@ SYSTEM_PROMPT = """你是 Omnichat 的資深業務顧問，擅長針對不同產
 
 @app.route("/", methods=["GET"])
 def home():
-return send_from_directory(".", "index.html")
+return app.send_static_file("index.html")
 
 
 @app.route("/health", methods=["GET"])
