@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Omnichat Brand Scout</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #111827, #1f2937);
+      color: white;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+    }
+    .hero p {
+      margin: 0;
+      opacity: 0.9;
+      line-height: 1.7;
+    }
+    .panel {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      margin-bottom: 20px;
+    }
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid #d1d5db;
+      font-size: 16px;
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+    }
+    button {
+      border: none;
+      background: #111827;
+      color: white;
+      padding: 0 24px;
+      border-radius: 14px;
+      font-size: 16px;
+      cursor: pointer;
+      min-height: 52px;
+    }
+    button:hover { opacity: 0.94; }
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+    .hint {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .hidden { display: none; }
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #374151;
+      font-weight: 600;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #6366f1;
+      animation: blink 1s infinite alternate;
+    }
+    @keyframes blink {
+      from { opacity: 0.3; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1.1); }
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    }
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    @media (max-width: 900px) {
+      .span-4, .span-6, .span-8, .span-12 { grid-column: span 12; }
+      .input-row { grid-template-columns: 1fr; }
+      button { width: 100%; }
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .emoji {
+      font-size: 34px;
+    }
+    .brand-title {
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .sub {
+      color: #6b7280;
+      margin-top: 6px;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tag.g { background: #dcfce7; color: #166534; }
+    .tag.a { background: #fef3c7; color: #92400e; }
+    .tag.r { background: #fee2e2; color: #991b1b; }
+    .tag.b { background: #dbeafe; color: #1d4ed8; }
+    .tag.gray { background: #e5e7eb; color: #374151; }
+
+    .verdict {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .verdict.yes { background: #dcfce7; color: #166534; }
+    .verdict.maybe { background: #fef3c7; color: #92400e; }
+    .verdict.no { background: #fee2e2; color: #991b1b; }
+
+    .score {
+      margin-top: 12px;
+    }
+    .score-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #374151;
+    }
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #111827);
+      border-radius: 999px;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+    ul.clean {
+      padding-left: 18px;
+      margin: 0;
+      line-height: 1.8;
+    }
+    .qual-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .qual-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+    }
+    .status {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .status.pass { background: #dcfce7; color: #166534; }
+    .status.fail { background: #fee2e2; color: #991b1b; }
+    .status.unknown { background: #e5e7eb; color: #374151; }
+    .qual-detail {
+      margin-top: 8px;
+      color: #6b7280;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+    .email-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      background: #fcfcfd;
+    }
+    .email-meta {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+    .email-subject {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .email-body {
+      white-space: pre-wrap;
+      line-height: 1.8;
+      color: #374151;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin-top: 16px;
+    }
+    .footer-note {
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Omnichat Brand Scout</h1>
+      <p>輸入品牌名稱，快速判斷是否值得開發、生成業務開發信，並整理成可讀的顧問式分析報告。</p>
+    </div>
+
+    <div class="panel">
+      <label for="brandInput"><strong>品牌名稱</strong></label>
+      <div class="input-row">
+        <input id="brandInput" type="text" placeholder="例如：NET、茶湯會、Pinkoi、50嵐" />
+        <button id="analyzeBtn" onclick="analyzeBrand()">開始分析</button>
+      </div>
+      <div class="hint">先從品牌名稱測試即可。等系統穩定後，我們再升級成圖片上傳版。</div>
+      <div id="errorBox" class="error hidden"></div>
+    </div>
+
+    <div id="loadingPanel" class="panel hidden">
+      <div class="loading">
+        <div class="dot"></div>
+        <div>品牌分析中，請稍候 10～20 秒...</div>
+      </div>
+    </div>
+
+    <div id="resultArea" class="hidden">
+      <div class="grid">
+        <div class="card span-8">
+          <div class="brand-header">
+            <div id="brandEmoji" class="emoji">🏷️</div>
+            <div>
+              <div id="brandTitle" class="brand-title">品牌名稱</div>
+              <div id="brandSub" class="sub">產業 / 類別</div>
+            </div>
+          </div>
+          <div id="brandTags" class="tags"></div>
+          <div id="brandVerdict" class="verdict">建議狀態</div>
+          <p id="brandReason" style="margin-top:14px; line-height:1.8; color:#374151;"></p>
+        </div>
+
+        <div class="card span-4">
+          <h2>綜合分數</h2>
+          <div id="scoreOverall"></div>
+          <div id="scoreEcommerce"></div>
+          <div id="scoreChannel"></div>
+          <div id="scorePotential"></div>
+        </div>
+
+        <div class="card span-6">
+          <h2>優勢亮點</h2>
+          <ul id="prosList" class="clean"></ul>
+        </div>
+
+        <div class="card span-6">
+          <h2>潛在風險</h2>
+          <ul id="risksList" class="clean"></ul>
+        </div>
+
+        <div class="card span-12">
+          <h2>開發資格檢查</h2>
+          <div id="qualificationsList"></div>
+        </div>
+
+        <div class="card span-6">
+          <h2>開發信 A</h2>
+          <div class="email-card">
+            <div id="emailALabel" class="email-meta"></div>
+            <div id="emailASubject" class="email-subject"></div>
+            <div id="emailABody" class="email-body"></div>
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <h2>開發信 B</h2>
+          <div class="email-card">
+            <div id="emailBLabel" class="email-meta"></div>
+            <div id="emailBSubject" class="email-subject"></div>
+            <div id="emailBBody" class="email-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">Powered by Omnichat Brand Scout</div>
+  </div>
+
+  <script>
+    function safeArray(value) {
+      return Array.isArray(value) ? value : [];
+    }
+
+    function safeText(value, fallback = "—") {
+      return value ? value : fallback;
+    }
+
+    function renderScore(containerId, label, value) {
+      const score = Number(value || 0);
+      document.getElementById(containerId).innerHTML = `
+        <div class="score">
+          <div class="score-label">
+            <span>${label}</span>
+            <span>${score}</span>
+          </div>
+          <div class="bar">
+            <div class="bar-fill" style="width:${Math.min(Math.max(score, 0), 100)}%"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderList(id, items) {
+      const el = document.getElementById(id);
+      const arr = safeArray(items);
+      if (!arr.length) {
+        el.innerHTML = "<li>暫無資料</li>";
+        return;
+      }
+      el.innerHTML = arr.map(item => `<li>${item}</li>`).join("");
+    }
+
+    function verdictClass(verdict) {
+      if (verdict === "yes") return "verdict yes";
+      if (verdict === "maybe") return "verdict maybe";
+      return "verdict no";
+    }
+
+    function statusText(status) {
+      if (status === "pass") return "符合";
+      if (status === "fail") return "不符合";
+      return "待確認";
+    }
+
+    async function analyzeBrand() {
+      const brandName = document.getElementById("brandInput").value.trim();
+      const btn = document.getElementById("analyzeBtn");
+      const loading = document.getElementById("loadingPanel");
+      const resultArea = document.getElementById("resultArea");
+      const errorBox = document.getElementById("errorBox");
+
+      errorBox.classList.add("hidden");
+      resultArea.classList.add("hidden");
+
+      if (!brandName) {
+        errorBox.textContent = "請先輸入品牌名稱。";
+        errorBox.classList.remove("hidden");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "分析中...";
+      loading.classList.remove("hidden");
+
+      try {
+        const response = await fetch("/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ brandName })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          throw new Error(data.error || "分析失敗");
+        }
+
+        document.getElementById("brandEmoji").textContent = safeText(data.emoji, "🏷️");
+        document.getElementById("brandTitle").textContent = safeText(data.brandName, brandName);
+        document.getElementById("brandSub").textContent =
+          `${safeText(data.industry, "其他")} / ${safeText(data.category, "未分類")}`;
+
+        const tags = safeArray(data.tags);
+        document.getElementById("brandTags").innerHTML = tags.length
+          ? tags.map(tag => `<span class="tag ${tag.type || 'gray'}">${tag.text || '標籤'}</span>`).join("")
+          : `<span class="tag gray">尚無標籤</span>`;
+
+        const verdictEl = document.getElementById("brandVerdict");
+        verdictEl.className = verdictClass(data.verdict);
+        verdictEl.textContent = safeText(data.verdictTitle, "待判斷");
+
+        document.getElementById("brandReason").textContent = safeText(data.verdictReason, "目前沒有分析說明。");
+
+        renderScore("scoreOverall", "整體開發分數", data?.scores?.overall);
+        renderScore("scoreEcommerce", "電商成熟度", data?.scores?.ecommerce);
+        renderScore("scoreChannel", "渠道經營度", data?.scores?.channel);
+        renderScore("scorePotential", "商機潛力", data?.scores?.potential);
+
+        renderList("prosList", data.pros);
+        renderList("risksList", data.risks);
+
+        const qualifications = safeArray(data.qualifications);
+        document.getElementById("qualificationsList").innerHTML = qualifications.length
+          ? qualifications.map(item => `
+            <div class="qual-item">
+              <div class="qual-top">
+                <span>${safeText(item.label)}</span>
+                <span class="status ${item.status || 'unknown'}">${statusText(item.status)}</span>
+              </div>
+              <div class="qual-detail">${safeText(item.detail, "尚無說明")}</div>
+            </div>
+          `).join("")
+          : "<div class='qual-item'>暫無資格檢查資料</div>";
+
+        document.getElementById("emailALabel").textContent =
+          `${safeText(data?.emailA?.label)}｜${safeText(data?.emailA?.targetRole)}`;
+        document.getElementById("emailASubject").textContent =
+          `主旨：${safeText(data?.emailA?.subject)}`;
+        document.getElementById("emailABody").textContent =
+          safeText(data?.emailA?.body, "暫無信件內容");
+
+        document.getElementById("emailBLabel").textContent =
+          `${safeText(data?.emailB?.label)}｜${safeText(data?.emailB?.targetRole)}`;
+        document.getElementById("emailBSubject").textContent =
+          `主旨：${safeText(data?.emailB?.subject)}`;
+        document.getElementById("emailBBody").textContent =
+          safeText(data?.emailB?.body, "暫無信件內容");
+
+        resultArea.classList.remove("hidden");
+      } catch (err) {
+        errorBox.textContent = "分析失敗：" + err.message;
+        errorBox.classList.remove("hidden");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "開始分析";
+        loading.classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>
