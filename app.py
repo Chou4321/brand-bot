@@ -100,11 +100,12 @@ def analyze():
         content = user_text
 
     try:
-        response = client.messages.create(
-            model="claude-3-sonnet-20240229",
-            max_tokens=2000,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": content}]
+ response = client.messages.create(
+    model="claude-sonnet-4-5-20250929",
+    max_tokens=2000,
+    system=SYSTEM_PROMPT,
+    messages=[{"role": "user", "content": content}]
+)
         )
 
         all_text = ""
