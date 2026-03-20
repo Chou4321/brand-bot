@@ -101,12 +101,12 @@ def analyze():
 
     try:
  response = client.messages.create(
-    model="claude-sonnet-4-5-20250929",
+ model="claude-3-5-sonnet-20241022",
     max_tokens=2000,
     system=SYSTEM_PROMPT,
     messages=[{"role": "user", "content": content}]
 )
-        )
+      
 
         all_text = ""
         for block in response.content:
