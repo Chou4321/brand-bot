@@ -6,17 +6,12 @@
 <title>Omnichat Brand Scout</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════
-   把這裡換成你的 Render 後端網址
-   例：https://omnichat-scout.onrender.com
-   ═══════════════════════════════════════ */
 :root {
-  --api-url: ""; /* 部署後在 JS 裡改 */
   --bg:#0d0f14;--surface:#141720;--surface2:#1c2030;
   --border:rgba(255,255,255,.07);--border-hi:rgba(255,255,255,.14);
   --text:#f0f2f7;--muted:#6b7280;--dim:#9ca3af;
   --green:#22d3a0;--green-dim:rgba(34,211,160,.12);--green-border:rgba(34,211,160,.25);
-  --amber:#f59e0b;--amber-dim:rgba(245,158,11,.1);
+  --amber:#f59e0b;--amber-dim:rgba(245,158,11,.1);--amber-border:rgba(245,158,11,.25);
   --red:#f87171;--red-dim:rgba(248,113,113,.1);
   --blue:#60a5fa;--blue-dim:rgba(96,165,250,.1);
   --purple:#a78bfa;--purple-dim:rgba(167,139,250,.1);
@@ -24,6 +19,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh;line-height:1.6}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 80% 10%,rgba(34,211,160,.05) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 10% 80%,rgba(96,165,250,.03) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* HEADER */
 header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 40px;height:58px;display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:10px}
 .logo-icon{width:30px;height:30px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px}
@@ -33,10 +30,28 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .sp{display:flex;align-items:center;gap:6px;background:var(--green-dim);border:1px solid var(--green-border);padding:4px 10px;border-radius:20px;color:var(--green)}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:glow 2s infinite}
 @keyframes glow{0%,100%{box-shadow:0 0 4px var(--green)}50%{box-shadow:0 0 10px var(--green);opacity:.6}}
+
 .page{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:48px 24px 100px}
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
 /* SETUP BANNER */
+.setup-banner{background:rgba(245,158,11,.08);border:1px solid var(--amber-border);border-radius:12px;padding:14px 18px;margin-bottom:24px;font-size:13px;line-height:1.7;animation:rise .4s ease both}
+.setup-banner strong{color:var(--amber)}
+.setup-banner code{background:rgba(245,158,11,.15);padding:1px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px}
+.setup-row{display:flex;gap:8px;margin-top:10px}
+.setup-input{flex:1;background:var(--surface);border:1px solid var(--border-hi);border-radius:8px;padding:9px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);outline:none;transition:border-color .2s}
+.setup-input:focus{border-color:var(--amber-border)}
+.setup-btn{padding:9px 16px;background:var(--amber);color:#0d0f14;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.setup-btn:hover{background:#fbbf24}
+
+/* KEY STATUS */
+.key-bar{display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 16px;margin-bottom:16px}
+.key-bar.show{display:flex}
+.key-info{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green)}
+.change-btn{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;transition:all .15s}
+.change-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* HERO */
 .hero{margin-bottom:36px;animation:rise .55s ease both}
 .hero-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--green);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .hero-label::before{content:'';width:24px;height:1px;background:var(--green)}
@@ -47,11 +62,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .cb{font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:3px 9px;border-radius:4px;border:1px solid var(--border-hi);color:var(--dim);background:var(--surface)}
 .cb.key{border-color:var(--green-border);color:var(--green);background:var(--green-dim)}
 
+/* INPUT */
 .upload-zone{animation:rise .55s ease .1s both;margin-bottom:20px}
 .upload-box{border:2px dashed rgba(255,255,255,.1);border-radius:16px;background:var(--surface);padding:44px 28px;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
-.upload-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(34,211,160,.04) 0%,transparent 70%);opacity:0;transition:opacity .3s}
-.upload-box:hover::before,.upload-box.drag::before{opacity:1}
-.upload-box:hover,.upload-box.drag{border-color:var(--green-border)}
+.upload-box:hover,.upload-box.drag{border-color:var(--green-border);background:rgba(34,211,160,.03)}
 .uiw{width:60px;height:60px;border-radius:14px;background:var(--surface2);border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;transition:transform .2s}
 .upload-box:hover .uiw{transform:scale(1.06)}
 .um{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:5px}
@@ -69,10 +83,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .ab{padding:13px 26px;background:var(--green);color:#0d0f14;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;white-space:nowrap}
 .ab:hover{background:#1ae898;box-shadow:0 6px 22px rgba(34,211,160,.35);transform:translateY(-1px)}
 .er{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:13px}
-.el{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em}
+.el{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
 .ec{font-size:12px;font-weight:500;padding:4px 11px;background:var(--surface2);border:1px solid var(--border-hi);border-radius:20px;color:var(--dim);cursor:pointer;transition:all .15s}
 .ec:hover{border-color:var(--green-border);color:var(--green);background:var(--green-dim)}
 
+/* LOADING */
 #loadingState{display:none;animation:rise .4s ease both}
 .lc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:38px 28px;text-align:center}
 .sp2{width:42px;height:42px;border:2.5px solid var(--border-hi);border-top-color:var(--green);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 18px}
@@ -86,6 +101,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .sn{width:21px;height:21px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;flex-shrink:0;transition:all .4s}
 .si.done .sn{background:var(--green);border-color:var(--green);color:#0d0f14}
 
+/* RESULT */
 #resultState{display:none}
 .br{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:12px;animation:rise .5s ease both}
 .bi{width:54px;height:54px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;overflow:hidden}
@@ -123,6 +139,15 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .sp-r{background:var(--red-dim);color:var(--red)}
 .sp-a{background:var(--amber-dim);color:var(--amber)}
 
+.scr{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;animation:rise .5s ease .15s both}
+.sb{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px 11px 13px;text-align:center}
+.sv{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;line-height:1;margin-bottom:5px;letter-spacing:-.02em}
+.sv-g{color:var(--green)}.sv-a{color:var(--amber)}.sv-r{color:var(--red)}
+.sl2{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.07em;line-height:1.35}
+.mb{width:100%;height:3px;background:var(--border-hi);border-radius:3px;margin-top:9px;overflow:hidden}
+.mf{height:100%;border-radius:3px;width:0;transition:width 1.4s cubic-bezier(.2,0,.1,1)}
+.mf-g{background:var(--green)}.mf-a{background:var(--amber)}.mf-r{background:var(--red)}
+
 .tc{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px;animation:rise .5s ease .2s both}
 .mc{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
 .bl{list-style:none}
@@ -132,6 +157,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .pro li::before{content:'◆';color:var(--green);font-size:8px;margin-top:4px}
 .risk li::before{content:'◇';color:var(--amber);font-size:8px;margin-top:4px}
 
+/* CONTACTS */
 .cs{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:12px;animation:rise .5s ease .25s both}
 .csh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .ccb{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:20px;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
@@ -141,7 +167,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .fls{flex-shrink:0;color:var(--blue)}
 .flo{color:var(--green)}.flm{color:var(--muted)}
 .flu{color:rgba(96,165,250,.4);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
-
 .ci{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--surface2);transition:border-color .2s}
 .ci:last-child{margin-bottom:0}
 .ci:hover{border-color:var(--green-border)}
@@ -155,7 +180,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .b-cs{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
 .b-pr{background:rgba(236,72,153,.1);color:#f472b6;border:1px solid rgba(236,72,153,.2)}
 .b-phone{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
-
 .cer{display:flex;align-items:center;gap:10px;background:rgba(34,211,160,.05);border:1px solid var(--green-border);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;transition:all .15s}
 .cer:hover{background:rgba(34,211,160,.1)}
 .cpr{display:flex;align-items:center;gap:10px;background:rgba(96,165,250,.05);border:1px solid rgba(96,165,250,.2);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;transition:all .15s}
@@ -165,23 +189,19 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .cpico{font-size:13px;color:var(--muted)}
 .csrc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:4px}
 .sd{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.sd-web{background:var(--blue)}.sd-fb{background:#1877f2}.sd-ig{background:#e1306c}
+.sd-web{background:var(--blue)}.sd-fb{background:#1877f2}.sd-ig{background:#e1306c}.sd-linkedin{background:#0077b5}
 .cn{margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.5;padding:7px 10px;background:var(--surface);border-radius:6px;border-left:2px solid var(--border-hi)}
 .cn.warn{border-left-color:var(--amber);color:var(--dim)}
 .nc{padding:14px 16px;background:var(--surface2);border:1px dashed var(--border-hi);border-radius:8px;font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:flex-start;line-height:1.6}
 
+/* EMAIL A/B */
 .ec2{background:var(--surface);border:1px solid var(--green-border);border-radius:14px;padding:20px 22px;margin-bottom:18px;animation:rise .5s ease .3s both;position:relative;overflow:hidden}
 .ec2::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent)}
-.helper-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin:0 0 12px;animation:rise .5s ease .12s both}
-.helper-row{display:flex;gap:10px;align-items:flex-start}
-.helper-copy{font-size:12.5px;color:var(--dim);line-height:1.7}
-.helper-copy strong{color:var(--text)}
-.helper-textarea{width:100%;min-height:88px;background:var(--surface2);border:1px solid var(--border-hi);border-radius:10px;padding:12px 14px;color:var(--text);font-size:13px;line-height:1.7;font-family:'Noto Sans TC',sans-serif;resize:vertical;outline:none}
-.helper-textarea:focus{border-color:var(--green-border);box-shadow:0 0 0 3px rgba(34,211,160,.08)}
-.step-actions{display:flex;gap:10px;margin-top:12px}
-.btn-s{background:var(--surface2);color:var(--text);border:1px solid var(--border-hi)}
-.btn-s:hover{background:#232838}
-.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.emeta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.etabs{display:flex;gap:4px;background:var(--surface2);border-radius:8px;padding:4px;margin-bottom:16px}
+.etab{flex:1;padding:8px;border:none;border-radius:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s}
+.etab.on{background:var(--green);color:#0d0f14}
+.etab.off{background:transparent;color:var(--muted)}
 .es{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);margin-bottom:12px;display:flex;align-items:flex-start;gap:8px}
 .es span{color:var(--muted);flex-shrink:0}
 .eb{font-size:13px;line-height:1.95;color:var(--dim);white-space:pre-line}
@@ -193,10 +213,18 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 .btn-g{background:transparent;color:var(--dim);border:1px solid var(--border-hi)}
 .btn-g:hover{color:var(--text);background:var(--surface2)}
 .ba{display:flex;gap:10px;animation:rise .5s ease .35s both}
+
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .disc{margin-top:32px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-align:center;line-height:1.8}
-@media(max-width:600px){header{padding:0 16px}.page{padding:26px 14px 80px}.qg,.tc,.step-actions{grid-template-columns:1fr;display:grid}.hm span:not(.sp){display:none}}
+
+@media(max-width:600px){
+  header{padding:0 16px}
+  .page{padding:26px 14px 80px}
+  .qg,.tc{grid-template-columns:1fr}
+  .scr{grid-template-columns:repeat(2,1fr)}
+  .hm span:not(.sp){display:none}
+}
 </style>
 </head>
 <body>
@@ -213,10 +241,27 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 
 <div class="page">
 
+  <!-- API KEY SETUP -->
+  <div class="setup-banner" id="setupBanner">
+    <strong>⚙️ 第一次使用：請填入你的 Anthropic API Key</strong><br>
+    前往 <code>console.anthropic.com/settings/keys</code> 取得你的 Key，輸入後儲存即可開始使用。Key 只存在你的瀏覽器，不會上傳到任何伺服器。
+    <div class="setup-row">
+      <input class="setup-input" id="apiKeyInput" placeholder="sk-ant-api03-..." type="password" autocomplete="off">
+      <button class="setup-btn" onclick="saveKey()">儲存 Key</button>
+    </div>
+  </div>
+
+  <!-- KEY STATUS BAR -->
+  <div class="key-bar" id="keyBar">
+    <div class="key-info">🔑 <span id="keyDisplay"></span></div>
+    <button class="change-btn" onclick="clearKey()">更換 Key</button>
+  </div>
+
+  <!-- HERO -->
   <div class="hero">
     <div class="hero-label">陌生開發輔助工具</div>
-    <h1 class="hero-title">先研究品牌<br>再產出 <span class="ac">開發信草稿</span></h1>
-    <p class="hero-desc">第一段先抓品牌條件、活躍度與聯絡窗口，第二段再依你的公版方向生成信件，減少等待時間也更容易調整內容。</p>
+    <h1 class="hero-title">上傳 Logo<br>秒判 <span class="ac">Omnichat 開發潛力</span></h1>
+    <p class="hero-desc">AI 透過 Web Fetch 直接讀取官網、FB、IG、LinkedIn，擷取行銷主管或老闆的真實 Email 與電話，並生成 A/B 兩版客製化開發信。</p>
     <div class="cstrip">
       <span class="cb key">✓ 電商/官網銷售</span>
       <span class="cb key">✓ LINE / WhatsApp OA</span>
@@ -227,6 +272,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
     </div>
   </div>
 
+  <!-- INPUT -->
   <div class="upload-zone" id="inputZone">
     <div class="upload-box" id="uploadBox"
       onclick="document.getElementById('fi').click()"
@@ -242,12 +288,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
     </div>
     <div class="od">或輸入品牌名稱 / 官網網址</div>
     <div class="nir">
-      <input class="ni" id="bi" type="text" placeholder="例：LATIV、www.86shop.com.tw、屈臣氏..." onkeydown="if(event.key==='Enter') goResearch()">
-      <button class="ab" onclick="goResearch()">第一段：研究品牌 →</button>
-    </div>
-    <div class="helper-card" style="margin-top:14px">
-      <div class="ch">第一段 · 搜尋範圍設定</div>
-      <textarea id="researchFocus" class="helper-textarea" placeholder="例：先以官網、LINE OA、Facebook About 為主；確認品牌是否有官網銷售、LINE 活躍度、社群經營狀況，若資訊不足再補 email 搜尋。"></textarea>
+      <input class="ni" id="bi" type="text" placeholder="例：LATIV、www.86shop.com.tw、屈臣氏..." onkeydown="if(event.key==='Enter') go()">
+      <button class="ab" onclick="go()">分析品牌 →</button>
     </div>
     <div class="er">
       <span class="el">快速範例：</span>
@@ -259,80 +301,75 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
     </div>
   </div>
 
+  <!-- LOADING -->
   <div id="loadingState">
     <div class="lc">
       <div class="sp2"></div>
       <div class="lt" id="lb">正在分析...</div>
-      <div class="ls">Web Fetch 實時讀取官網 / FB / IG 中</div>
+      <div class="ls">Web Fetch 實時讀取官網 / FB / IG / LinkedIn 中</div>
       <div class="sl">
         <div class="si active" id="st1"><div class="sn">1</div>辨識品牌，推斷官網網域</div>
-        <div class="si" id="st2"><div class="sn">2</div>優先讀取前 3 類重點來源</div>
-        <div class="si" id="st3"><div class="sn">3</div>彙整品牌條件與聯絡窗口</div>
-        <div class="si" id="st4"><div class="sn">4</div>依公版方向生成開發信</div>
+        <div class="si" id="st2"><div class="sn">2</div>Web Fetch 讀取官網聯絡頁 / Footer</div>
+        <div class="si" id="st3"><div class="sn">3</div>Web Fetch 讀取 FB / IG / LinkedIn</div>
+        <div class="si" id="st4"><div class="sn">4</div>擷取 Email + 電話，生成 A/B 開發信</div>
       </div>
     </div>
   </div>
 
+  <!-- RESULT -->
   <div id="resultState">
     <div class="br"><div class="bi" id="ri">🏷</div><div style="flex:1"><div class="bc" id="rc"></div><div class="bt" id="rn"></div><div class="tr" id="rt"></div></div></div>
     <div class="vd" id="rv"><div class="vi" id="rvi">✅</div><div><div class="vh" id="rvh"></div><div class="vt" id="rvt"></div></div></div>
-    <div class="helper-card">
-      <div class="ch">第二段 · 信件設定</div>
-      <div class="helper-row">
-        <div class="helper-copy">
-          <strong>大方向公版</strong><br>
-          這裡可以填你想套用的信件風格，例如產業切角、想強調的痛點、成功案例、CTA 或口吻要求。第一段研究完後，再按第二段生成信件。
-        </div>
-      </div>
-      <textarea id="emailDirection" class="helper-textarea" placeholder="例：先用食品業上半年會員經營方向切入，口吻專業但不要太硬，結尾主打 15 分鐘交流與案例分享。"></textarea>
-      <div class="step-actions">
-        <button class="btn btn-s" id="researchAgainBtn" onclick="goResearch()">重新研究品牌</button>
-        <button class="btn btn-p" id="composeBtn" onclick="goCompose()" disabled>第二段：生成開發信</button>
-      </div>
-    </div>
     <div class="qc"><div class="ch">開發條件核查</div><div class="qg" id="qg"></div></div>
+    <div class="scr">
+      <div class="sb"><div class="sv" id="sv1">—</div><div class="sl2">整體<br>適配分</div><div class="mb"><div class="mf" id="sf1"></div></div></div>
+      <div class="sb"><div class="sv" id="sv2">—</div><div class="sl2">電商<br>成熟度</div><div class="mb"><div class="mf" id="sf2"></div></div></div>
+      <div class="sb"><div class="sv" id="sv3">—</div><div class="sl2">渠道<br>活躍度</div><div class="mb"><div class="mf" id="sf3"></div></div></div>
+      <div class="sb"><div class="sv" id="sv4">—</div><div class="sl2">成交<br>潛力</div><div class="mb"><div class="mf" id="sf4"></div></div></div>
+    </div>
     <div class="tc">
       <div class="mc"><div class="ch">開發優勢</div><ul class="bl pro" id="rp"></ul></div>
       <div class="mc"><div class="ch">待確認 / 風險</div><ul class="bl risk" id="rr"></ul></div>
     </div>
+
+    <!-- CONTACTS -->
     <div class="cs">
-      <div class="csh"><div class="ch" style="margin:0">聯絡窗口 · Web Fetch 實時結果</div><span class="ccb" id="ccb">搜尋中...</span></div>
+      <div class="csh"><div class="ch" style="margin:0">聯絡窗口 · 真實搜尋結果</div><span class="ccb" id="ccb">搜尋中...</span></div>
       <div class="fl"><div class="flt">⚡ Web Fetch 讀取紀錄</div><div id="fll"></div></div>
       <div id="cl"></div>
     </div>
+
+    <!-- EMAIL A/B -->
     <div class="ec2">
-      <div class="ch" style="color:var(--green);margin-bottom:6px">第二段 · 客製化開發信草稿</div>
-      <div id="emailEmpty" style="font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:14px">第一段研究已完成。你可以先調整上方的大方向公版，再按「第二段：生成開發信」。</div>
-      <div id="emailMeta" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"></div>
-      <!-- Tab -->
-      <div style="display:flex;gap:4px;background:var(--surface2);border-radius:8px;padding:4px;margin-bottom:16px">
-        <button id="tabA" onclick="switchEmail('A')" style="flex:1;padding:8px;border:none;border-radius:6px;background:var(--green);color:#0d0f14;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s">版本 A · 數據導向</button>
-        <button id="tabB" onclick="switchEmail('B')" style="flex:1;padding:8px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s">版本 B · 故事導向</button>
+      <div class="ch" style="color:var(--green);margin-bottom:6px">客製化開發信草稿</div>
+      <div class="emeta" id="emeta"></div>
+      <div class="etabs">
+        <button class="etab on" id="tabA" onclick="switchEmail('A')">版本 A · 數據導向</button>
+        <button class="etab off" id="tabB" onclick="switchEmail('B')">版本 B · 故事導向</button>
       </div>
-      <!-- A -->
-      <div id="emailPanelA">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px" id="targetA"></div>
-        <div class="es"><span>主旨：</span><span id="rsubA"></span></div>
-        <div class="eb" id="rbodyA"></div>
+      <div id="panelA">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px" id="tgtA"></div>
+        <div class="es"><span>主旨：</span><span id="subA"></span></div>
+        <div class="eb" id="bodyA"></div>
         <div class="ea2">
-          <button class="btn btn-p" onclick="copyEmailA()">📋 複製版本 A</button>
-          <button class="btn btn-g" onclick="exportReport()">↓ 匯出報告</button>
+          <button class="btn btn-p" onclick="cpA()">📋 複製版本 A</button>
+          <button class="btn btn-g" onclick="exportAll()">↓ 匯出報告</button>
         </div>
       </div>
-      <!-- B -->
-      <div id="emailPanelB" style="display:none">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px" id="targetB"></div>
-        <div class="es"><span>主旨：</span><span id="rsubB"></span></div>
-        <div class="eb" id="rbodyB"></div>
+      <div id="panelB" style="display:none">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px" id="tgtB"></div>
+        <div class="es"><span>主旨：</span><span id="subB"></span></div>
+        <div class="eb" id="bodyB"></div>
         <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:12px;color:var(--amber);font-family:'JetBrains Mono',monospace">
           💡 建議策略：先發版本 A，若 3 天無回覆再發版本 B
         </div>
         <div class="ea2">
-          <button class="btn btn-p" onclick="copyEmailB()">📋 複製版本 B</button>
-          <button class="btn btn-g" onclick="exportReport()">↓ 匯出報告</button>
+          <button class="btn btn-p" onclick="cpB()">📋 複製版本 B</button>
+          <button class="btn btn-g" onclick="exportAll()">↓ 匯出報告</button>
         </div>
       </div>
     </div>
+
     <div class="ba"><button class="btn btn-g" onclick="resetAll()" style="flex:1;text-align:center">← 分析另一個品牌</button></div>
   </div>
 
@@ -341,17 +378,42 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,15,20,.9);backdrop-fi
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════
-const API_URL = window.location.protocol === 'file:' ? 'http://127.0.0.1:5000' : '';
+const API_URL = 'https://brand-bot-1.onrender.com';
+let USER_KEY = localStorage.getItem('omni_key') || '';
+let b64 = null, mime = 'image/jpeg';
 
-// 頁面載入時顯示本機狀態
+function mask(k){ return k.length<12?k:k.slice(0,10)+'••••••••'+k.slice(-4); }
+
+function saveKey(){
+  const v = document.getElementById('apiKeyInput').value.trim();
+  if(!v||!v.startsWith('sk-')){ showToast('請輸入有效的 API Key（sk- 開頭）'); return; }
+  USER_KEY = v;
+  localStorage.setItem('omni_key', v);
+  document.getElementById('setupBanner').style.display = 'none';
+  document.getElementById('keyBar').classList.add('show');
+  document.getElementById('keyDisplay').textContent = mask(v);
+  document.getElementById('apiStatus').textContent = 'API Key 已設定';
+  showToast('✅ API Key 已儲存！');
+}
+
+function clearKey(){
+  USER_KEY = '';
+  localStorage.removeItem('omni_key');
+  document.getElementById('keyBar').classList.remove('show');
+  document.getElementById('setupBanner').style.display = 'block';
+  document.getElementById('apiKeyInput').value = '';
+  document.getElementById('apiStatus').textContent = '未設定 API Key';
+}
+
 window.addEventListener('load', ()=>{
-  document.getElementById('apiStatus').textContent='本機運行中';
+  if(USER_KEY){
+    document.getElementById('setupBanner').style.display='none';
+    document.getElementById('keyBar').classList.add('show');
+    document.getElementById('keyDisplay').textContent=mask(USER_KEY);
+    document.getElementById('apiStatus').textContent='API Key 已設定';
+  }
 });
 
-// ── 上傳處理 ──
-let b64=null, mime='image/jpeg';
-let currentResearch=null;
 function handleFile(e){ const f=e.target.files[0]; if(f) readF(f); }
 function handleDrop(e){
   e.preventDefault(); document.getElementById('uploadBox').classList.remove('drag');
@@ -369,149 +431,78 @@ function readF(file){
   };
   r.readAsDataURL(file);
 }
-function resetUpload(){
-  b64=null; document.getElementById('fi').value='';
-  document.getElementById('du').style.display='block';
-  document.getElementById('ps').style.display='none';
-}
+function resetUpload(){ b64=null; document.getElementById('fi').value=''; document.getElementById('du').style.display='block'; document.getElementById('ps').style.display='none'; }
 function setEx(v){ document.getElementById('bi').value=v; document.getElementById('bi').focus(); }
 
-// ── RESEARCH ──
-async function goResearch(){
+async function go(){
+  if(!USER_KEY){ showToast('⚠️ 請先設定 API Key'); document.getElementById('setupBanner').style.display='block'; document.getElementById('apiKeyInput').focus(); return; }
   const name=document.getElementById('bi').value.trim();
-  const researchFocus=(document.getElementById('researchFocus')||{}).value?.trim?.()||'';
   if(!b64&&!name){ showToast('請上傳 Logo 或輸入品牌名稱'); return; }
-
   document.getElementById('inputZone').style.display='none';
   document.getElementById('resultState').style.display='none';
   document.getElementById('loadingState').style.display='block';
-  document.getElementById('lb').textContent=`正在研究「${name||'品牌'}」...`;
-  document.querySelector('#loadingState .ls').textContent='優先讀取官網、LINE OA 與主要社群頁面';
-  animSteps('research');
-
+  document.getElementById('lb').textContent=`正在分析「${name||'品牌'}」...`;
+  animSteps();
   try{
-    const res=await fetch(`${API_URL}/research`,{
+    const res=await fetch(`${API_URL}/analyze`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({brandName:name, imageB64:b64||'', imageMime:mime, researchFocus})
+      body:JSON.stringify({brandName:name, imageB64:b64||'', imageMime:mime, apiKey:USER_KEY})
     });
-    const d=await res.json().catch(()=>null);
-    if(!res.ok){
-      const msg=d&&d.error?d.error:`HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-    if(d&&d.error) throw new Error(d.error);
-    currentResearch=d;
-    renderResearch(d, name);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const d=await res.json();
+    if(d.error) throw new Error(d.error);
+    render(d,name);
   }catch(err){
     console.error(err);
-    showToast('❌ 第一段研究失敗：'+err.message);
+    showToast('❌ 分析失敗：'+err.message);
     document.getElementById('loadingState').style.display='none';
     document.getElementById('inputZone').style.display='block';
   }
 }
 
-async function goCompose(){
-  if(!currentResearch){ showToast('請先完成第一段品牌研究'); return; }
-  const emailDirection=document.getElementById('emailDirection').value.trim();
-  document.getElementById('loadingState').style.display='block';
-  document.getElementById('lb').textContent=`正在生成「${currentResearch.brandName||'品牌'}」的開發信...`;
-  document.querySelector('#loadingState .ls').textContent='這一段只根據研究結果與你的公版方向生成信件';
-  animSteps('compose');
-
-  try{
-    const res=await fetch(`${API_URL}/compose-email`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({research:currentResearch, emailDirection})
-    });
-    const d=await res.json().catch(()=>null);
-    if(!res.ok){
-      const msg=d&&d.error?d.error:`HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-    if(d&&d.error) throw new Error(d.error);
-    renderEmails(d);
-  }catch(err){
-    console.error(err);
-    document.getElementById('loadingState').style.display='none';
-    showToast('❌ 第二段信件生成失敗：'+err.message);
-  }
-}
-
-function animSteps(mode){
-  ['st1','st2','st3','st4'].forEach((id,i)=>{
-    const el=document.getElementById(id);
-    el.className='si'; el.querySelector('.sn').textContent=i+1;
-  });
+function animSteps(){
+  ['st1','st2','st3','st4'].forEach((id,i)=>{ const el=document.getElementById(id); el.className='si'; el.querySelector('.sn').textContent=i+1; });
   document.getElementById('st1').className='si active';
-  if(mode==='compose'){
-    document.getElementById('st1').className='si done'; document.getElementById('st1').querySelector('.sn').textContent='✓';
-    document.getElementById('st2').className='si done'; document.getElementById('st2').querySelector('.sn').textContent='✓';
-    document.getElementById('st3').className='si done'; document.getElementById('st3').querySelector('.sn').textContent='✓';
-    document.getElementById('st4').className='si active';
-    return;
-  }
   ['st2','st3','st4'].forEach((id,i)=>{
-    setTimeout(()=>{
-      const p=document.getElementById(['st1','st2','st3'][i]);
-      p.className='si done'; p.querySelector('.sn').textContent='✓';
-      document.getElementById(id).className='si active';
-    },(i+1)*1100);
+    setTimeout(()=>{ const p=document.getElementById(['st1','st2','st3'][i]); p.className='si done'; p.querySelector('.sn').textContent='✓'; document.getElementById(id).className='si active'; },(i+1)*1100);
   });
 }
 
-const ETC={personal:{l:'個人信箱',c:'b-personal'},dept:{l:'部門信箱',c:'b-dept'},general:{l:'通用信箱',c:'b-general'},cs:{l:'客服信箱',c:'b-cs'},pr:{l:'PR/合作信箱',c:'b-pr'}};
-const SDC={web:'sd-web',fb:'sd-fb',ig:'sd-ig'};
-const SICO={web:'🌐',fb:'📘',ig:'📸'};
+const ETC={personal:{l:'個人信箱',c:'b-personal'},dept:{l:'部門信箱',c:'b-dept'},general:{l:'通用信箱',c:'b-general'},cs:{l:'客服信箱',c:'b-cs'},pr:{l:'PR信箱',c:'b-pr'}};
+const SDC={web:'sd-web',fb:'sd-fb',ig:'sd-ig',linkedin:'sd-linkedin'};
+const SICO={web:'🌐',fb:'📘',ig:'📸',linkedin:'💼'};
+const TIER={startup:'LINE粉絲起步期',growth:'LINE粉絲成長期',mature:'LINE粉絲成熟期'};
+const TCOL={startup:'var(--amber)',growth:'var(--blue)',mature:'var(--green)'};
 
-function renderResearch(d, input){
+function render(d,input){
   setTimeout(()=>{
     document.getElementById('loadingState').style.display='none';
-
-    // Brand
     const ri=document.getElementById('ri');
     if(b64) ri.innerHTML=`<img src="data:${mime};base64,${b64}" alt="">`;
     else ri.textContent=d.emoji||'🏷';
     document.getElementById('rc').textContent=d.category||'BRAND';
     document.getElementById('rn').textContent=d.brandName||input||'品牌';
     document.getElementById('rt').innerHTML=(d.tags||[]).map(t=>`<span class="tg tg-${t.type||'gray'}">${t.text}</span>`).join('');
-
-    // Verdict
     document.getElementById('rv').className=`vd ${d.verdict||'maybe'}`;
     document.getElementById('rvi').textContent={yes:'✅',maybe:'🤔',no:'⛔'}[d.verdict]||'🤔';
     document.getElementById('rvh').textContent=d.verdictTitle||'';
     document.getElementById('rvt').textContent=d.verdictReason||'';
-
-    // Qual
     const SM={pass:{i:'✅',c:'sp-g',l:'符合'},fail:{i:'❌',c:'sp-r',l:'不符合'},unknown:{i:'❓',c:'sp-a',l:'待確認'}};
-    document.getElementById('qg').innerHTML=(d.qualifications||[]).map(q=>{
-      const s=SM[q.status]||SM.unknown;
-      const srcLink=q.sourceUrl?`<a href="${q.sourceUrl}" target="_blank" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--blue);display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 來源</a>`:'';
-      return `<div class="qi ${q.status||'unknown'}"><span class="qico">${s.i}</span><div class="ql">${q.label}<small>${q.detail||''}</small>${srcLink}</div><span class="qs ${s.c}">${s.l}</span></div>`;
-    }).join('');
-
-    // Pros/Risks
+    document.getElementById('qg').innerHTML=(d.qualifications||[]).map(q=>{ const s=SM[q.status]||SM.unknown; return `<div class="qi ${q.status||'unknown'}"><span class="qico">${s.i}</span><div class="ql">${q.label}<small>${q.detail||''}</small></div><span class="qs ${s.c}">${s.l}</span></div>`; }).join('');
+    const sc=d.scores||{};
+    [['1',sc.overall],['2',sc.ecommerce],['3',sc.channel],['4',sc.potential]].forEach(([i,v])=>{
+      v=v||0; const cc=v>=70?'sv-g':v>=40?'sv-a':'sv-r'; const fc=v>=70?'mf-g':v>=40?'mf-a':'mf-r';
+      document.getElementById('sv'+i).textContent=v; document.getElementById('sv'+i).className='sv '+cc;
+      const f=document.getElementById('sf'+i); f.className='mf '+fc; setTimeout(()=>f.style.width=v+'%',300);
+    });
     document.getElementById('rp').innerHTML=(d.pros||[]).map(p=>`<li>${p}</li>`).join('');
     document.getElementById('rr').innerHTML=(d.risks||[]).map(r=>`<li>${r}</li>`).join('');
-
-    // Fetch log — 優先顯示後端直接抓到的真實 fetch URL
-    const realUrls = d._actualFetchedUrls || [];
-    const logs = d.fetchLog || [];
-    if(realUrls.length > 0){
-      document.getElementById('fll').innerHTML = '<div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">✅ 以下為 AI 實際讀取的網址（可點擊驗證）</div>'
-        + realUrls.map(u=>`<div class="fll"><span class="flo">🔗</span><a href="${u}" target="_blank" style="color:#7dd3fc;font-size:12px;word-break:break-all">${u}</a></div>`).join('');
-    } else if(logs.length > 0){
-      document.getElementById('fll').innerHTML=logs.map(l=>`<div class="fll"><span class="fls">${SICO[l.sourceType]||'🌐'} [${(l.source||'').toUpperCase()}]</span><span class="${l.found?'flo':'flm'}">${l.found?'✅ '+l.foundWhat:'○ 未找到'}</span><span class="flu">${l.url||''}</span></div>`).join('');
-    } else {
-      document.getElementById('fll').innerHTML='<div class="fll"><span>已嘗試讀取官網 / FB / IG 公開頁面</span></div>';
-    }
-
-    // Contacts
+    const logs=d.fetchLog||[];
+    document.getElementById('fll').innerHTML=logs.length?logs.map(l=>`<div class="fll"><span class="fls">${SICO[l.sourceType]||'🌐'} [${(l.source||'').toUpperCase()}]</span><span class="${l.found?'flo':'flm'}">${l.found?'✅ '+l.foundWhat:'○ 未找到'}</span><span class="flu">${l.url||''}</span></div>`).join(''):'<div class="fll"><span>已嘗試讀取官網 / FB / IG / LinkedIn</span></div>';
     const contacts=d.contacts||[];
     const found=contacts.filter(c=>c.value&&c.value.trim());
     document.getElementById('ccb').textContent=found.length>0?`找到 ${found.length} 筆聯絡資訊`:'未找到公開資訊';
-
     if(d.noContactFound||found.length===0){
       document.getElementById('cl').innerHTML=`<div class="nc"><span>⚠️</span><div><div style="font-weight:700;margin-bottom:5px;color:var(--amber)">未找到公開聯絡資訊</div><div>${d.noContactSuggestion||'建議透過官網聯絡表單或 LinkedIn 搜尋行銷主管。'}</div></div></div>`;
     } else {
@@ -519,12 +510,12 @@ function renderResearch(d, input){
         if(!c.value||!c.value.trim()) return '';
         if(c.type==='email'){
           const cfg=ETC[c.emailType]||ETC.general;
-          return `<div class="ci"><div class="ct"><div><div class="crt">${c.role||'品牌聯絡窗口'}</div><div class="crs">${c.source||''}</div></div><span class="etb ${cfg.c}">${c.emailTypeLabel||cfg.l}</span></div>
+          return `<div class="ci"><div class="ct"><div><div class="crt">${c.name?c.name+' · ':''} ${c.role||'品牌聯絡窗口'}</div><div class="crs">${c.title||''} ${c.source?'· '+c.source:''}</div></div><span class="etb ${cfg.c}">${c.emailTypeLabel||cfg.l}</span></div>
           <div class="cer" onclick="cpText('${c.value}');showToast('✅ Email 已複製')"><span class="ea">${c.value}</span><span class="cpico">📋</span></div>
           <div class="csrc"><span class="sd ${SDC[c.sourceType]||''}"></span>來源：${c.source||'—'}</div>
           ${c.note?`<div class="cn ${c.noteWarn?'warn':''}">💡 ${c.note}</div>`:''}</div>`;
         } else if(c.type==='phone'){
-          return `<div class="ci"><div class="ct"><div><div class="crt">${c.role||'公司電話'}</div><div class="crs">${c.phoneType||''} · ${c.source||''}</div></div><span class="etb b-phone">📞 ${c.phoneType||'電話'}</span></div>
+          return `<div class="ci"><div class="ct"><div><div class="crt">${c.role||'公司電話'}</div><div class="crs">${c.phoneType||''} ${c.source?'· '+c.source:''}</div></div><span class="etb b-phone">📞 ${c.phoneType||'電話'}</span></div>
           <div class="cpr" onclick="cpText('${c.value}');showToast('✅ 電話已複製')"><span class="pa">${c.value}</span><span class="cpico">📋</span></div>
           <div class="csrc"><span class="sd ${SDC[c.sourceType]||''}"></span>來源：${c.source||'—'}</div>
           ${c.note?`<div class="cn ${c.noteWarn?'warn':''}">💡 ${c.note}</div>`:''}</div>`;
@@ -532,78 +523,47 @@ function renderResearch(d, input){
         return '';
       }).join('');
     }
-
-    // ── EMAIL META BADGES ──
-    const tierLabel={'startup':'LINE粉絲起步期','growth':'LINE粉絲成長期','mature':'LINE粉絲成熟期'};
-    const tierColor={'startup':'var(--amber)','growth':'var(--blue)','mature':'var(--green)'};
     const tier=d.lineFollowerTier||'growth';
-    document.getElementById('emailMeta').innerHTML=`
+    document.getElementById('emeta').innerHTML=`
       <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:4px;background:var(--surface2);border:1px solid var(--border-hi);color:var(--dim)">產業：${d.industry||'通用'}</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:4px;background:var(--surface2);border:1px solid ${tierColor[tier]};color:${tierColor[tier]}">${tierLabel[tier]||'成長期'}</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:4px;background:var(--surface2);border:1px solid var(--border-hi);color:var(--dim)">主要發送：${d.primaryEmailType==='personal'?'個人信箱':d.primaryEmailType==='dept'?'部門信箱':d.primaryEmailType==='pr'?'PR信箱':'通用信箱'}</span>`;
-    document.getElementById('emailEmpty').style.display='block';
-    document.getElementById('targetA').textContent='';
-    document.getElementById('rsubA').textContent='';
-    document.getElementById('rbodyA').innerHTML='';
-    document.getElementById('targetB').textContent='';
-    document.getElementById('rsubB').textContent='';
-    document.getElementById('rbodyB').innerHTML='';
-    document.getElementById('composeBtn').disabled=false;
-
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:4px;background:var(--surface2);border:1px solid ${TCOL[tier]};color:${TCOL[tier]}">${TIER[tier]||'成長期'}</span>`;
+    const eA=d.emailA||{};
+    document.getElementById('tgtA').textContent='📌 '+(eA.targetRole||'');
+    document.getElementById('subA').textContent=eA.subject||'';
+    document.getElementById('bodyA').innerHTML=(eA.body||'').replace(/\{\{([^}]+)\}\}/g,'<span class="vh2">{{$1}}</span>');
+    const eB=d.emailB||{};
+    document.getElementById('tgtB').textContent='📌 '+(eB.targetRole||'');
+    document.getElementById('subB').textContent=eB.subject||'';
+    document.getElementById('bodyB').innerHTML=(eB.body||'').replace(/\{\{([^}]+)\}\}/g,'<span class="vh2">{{$1}}</span>');
     document.getElementById('resultState').style.display='block';
     document.getElementById('resultState').scrollIntoView({behavior:'smooth',block:'start'});
-  }, 4500);
+  },4500);
 }
 
-function renderEmails(d){
-  document.getElementById('loadingState').style.display='none';
-  document.getElementById('emailEmpty').style.display='none';
-  const eA=d.emailA||{};
-  document.getElementById('targetA').textContent='📌 '+(eA.targetRole||'適合行銷主管');
-  document.getElementById('rsubA').textContent=eA.subject||'';
-  document.getElementById('rbodyA').innerHTML=(eA.body||'').replace(/\{\{([^}]+)\}\}/g,'<span class="vh2">{{$1}}</span>');
-
-  const eB=d.emailB||{};
-  document.getElementById('targetB').textContent='📌 '+(eB.targetRole||'適合通用信箱');
-  document.getElementById('rsubB').textContent=eB.subject||'';
-  document.getElementById('rbodyB').innerHTML=(eB.body||'').replace(/\{\{([^}]+)\}\}/g,'<span class="vh2">{{$1}}</span>');
-  switchEmail('A');
-  document.getElementById('resultState').scrollIntoView({behavior:'smooth',block:'start'});
-  showToast('✅ 第二段開發信已生成');
+function switchEmail(v){
+  const isA=v==='A';
+  document.getElementById('panelA').style.display=isA?'block':'none';
+  document.getElementById('panelB').style.display=isA?'none':'block';
+  document.getElementById('tabA').className='etab '+(isA?'on':'off');
+  document.getElementById('tabB').className='etab '+(isA?'off':'on');
 }
-
-function switchEmail(ver){
-  const isA=ver==='A';
-  document.getElementById('emailPanelA').style.display=isA?'block':'none';
-  document.getElementById('emailPanelB').style.display=isA?'none':'block';
-  document.getElementById('tabA').style.cssText=isA?'flex:1;padding:8px;border:none;border-radius:6px;background:var(--green);color:#0d0f14;font-family:Syne,sans-serif;font-weight:700;font-size:12px;cursor:pointer':'flex:1;padding:8px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-family:Syne,sans-serif;font-weight:700;font-size:12px;cursor:pointer';
-  document.getElementById('tabB').style.cssText=isA?'flex:1;padding:8px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-family:Syne,sans-serif;font-weight:700;font-size:12px;cursor:pointer':'flex:1;padding:8px;border:none;border-radius:6px;background:var(--green);color:#0d0f14;font-family:Syne,sans-serif;font-weight:700;font-size:12px;cursor:pointer';
-}
-function copyEmailA(){
-  cpText('主旨：'+document.getElementById('rsubA').textContent+'\n\n'+document.getElementById('rbodyA').textContent);
-  showToast('✅ 版本 A 已複製！');
-}
-function copyEmailB(){
-  cpText('主旨：'+document.getElementById('rsubB').textContent+'\n\n'+document.getElementById('rbodyB').textContent);
-  showToast('✅ 版本 B 已複製！');
-}
-function exportReport(){
+function cpA(){ cpText('主旨：'+document.getElementById('subA').textContent+'\n\n'+document.getElementById('bodyA').textContent); showToast('✅ 版本 A 已複製！'); }
+function cpB(){ cpText('主旨：'+document.getElementById('subB').textContent+'\n\n'+document.getElementById('bodyB').textContent); showToast('✅ 版本 B 已複製！'); }
+function exportAll(){
   const name=document.getElementById('rn').textContent;
   const blob=new Blob([
     'Omnichat Brand Scout 報告\n品牌：'+name+'\n判定：'+document.getElementById('rvh').textContent+'\n'+document.getElementById('rvt').textContent+
-    '\n\n━━━ 版本A·數據導向 ━━━\n主旨：'+document.getElementById('rsubA').textContent+'\n\n'+document.getElementById('rbodyA').textContent+
-    '\n\n━━━ 版本B·故事導向 ━━━\n主旨：'+document.getElementById('rsubB').textContent+'\n\n'+document.getElementById('rbodyB').textContent+
+    '\n\n━━━ 版本A ━━━\n主旨：'+document.getElementById('subA').textContent+'\n\n'+document.getElementById('bodyA').textContent+
+    '\n\n━━━ 版本B ━━━\n主旨：'+document.getElementById('subB').textContent+'\n\n'+document.getElementById('bodyB').textContent+
     '\n\n💡 建議先發版本A，3天無回覆再發版本B'
   ],{type:'text/plain;charset=utf-8'});
   Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:'Omnichat_'+name+'.txt'}).click();
-  showToast('📄 報告已下載（含A/B兩版）！');
+  showToast('📄 報告已下載！');
 }
 function resetAll(){
-  currentResearch=null;
   document.getElementById('resultState').style.display='none';
   document.getElementById('loadingState').style.display='none';
   document.getElementById('inputZone').style.display='block';
-  document.getElementById('composeBtn').disabled=true;
   document.getElementById('bi').value=''; resetUpload();
   window.scrollTo({top:0,behavior:'smooth'});
 }
