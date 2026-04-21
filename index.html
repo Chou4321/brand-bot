@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmniScout · 品牌開發篩選機器人</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0c10;--s1:#111318;--s2:#181c24;--s3:#1e2330;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.12);
+  --text:#eef0f6;--dim:#8b92a8;--muted:#555e74;
+  --g:#1fd496;--gdim:rgba(31,212,150,.12);--gbr:rgba(31,212,150,.28);
+  --a:#f5a623;--adim:rgba(245,166,35,.1);--abr:rgba(245,166,35,.28);
+  --r:#f0625a;--rdim:rgba(240,98,90,.1);--rbr:rgba(240,98,90,.25);
+  --b:#4f8ef7;--bdim:rgba(79,142,247,.1);--bbr:rgba(79,142,247,.25);
+  --line:#06c755;--fb:#1877f2;--ig:#e1306c;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 50% 35% at 75% 5%,rgba(31,212,150,.06) 0%,transparent 55%),radial-gradient(ellipse 35% 25% at 15% 90%,rgba(79,142,247,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:50;background:rgba(10,12,16,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--g),#0ab87a);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo-name{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:-.01em}
+.logo-name em{color:var(--g);font-style:normal}
+.hstatus{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.hpill{display:flex;align-items:center;gap:5px;background:var(--gdim);border:1px solid var(--gbr);padding:3px 10px;border-radius:20px;color:var(--g)}
+.hpill .dot{width:5px;height:5px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 4px var(--g)}50%{opacity:.5;box-shadow:0 0 8px var(--g)}}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:44px 20px 90px}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── KEY SETUP ── */
+.key-box{background:var(--adim);border:1px solid var(--abr);border-radius:14px;padding:18px 20px;margin-bottom:22px;animation:up .4s ease both}
+.key-box h3{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--a);margin-bottom:6px}
+.key-box p{font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:12px}
+.key-box code{background:rgba(245,166,35,.15);padding:1px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--a)}
+.key-row{display:flex;gap:8px}
+.key-in{flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:8px;padding:9px 13px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);outline:none;transition:border-color .2s}
+.key-in:focus{border-color:var(--abr)}
+.key-save{padding:9px 16px;background:var(--a);color:#0a0c10;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.key-save:hover{background:#fbbf24}
+.key-bar{display:none;align-items:center;justify-content:space-between;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:9px 14px;margin-bottom:14px}
+.key-bar.on{display:flex}
+.key-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g);display:flex;align-items:center;gap:7px}
+.key-clr{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);background:none;border:1px solid var(--b1);border-radius:6px;padding:2px 9px;cursor:pointer;transition:all .15s}
+.key-clr:hover{border-color:var(--rbr);color:var(--r)}
+
+/* ── HERO ── */
+.hero{margin-bottom:32px;animation:up .5s ease both}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--g);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.hero-tag::before{content:'';width:20px;height:1px;background:var(--g)}
+.hero-h{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(26px,5vw,44px);line-height:1.1;letter-spacing:-.02em;margin-bottom:12px}
+.hero-h .ac{color:var(--g)}
+.hero-p{font-size:13px;color:var(--dim);line-height:1.8;max-width:480px}
+
+/* ── INPUT CARD ── */
+.input-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:24px;margin-bottom:20px;animation:up .5s ease .08s both}
+.input-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.input-row{display:flex;gap:10px}
+.brand-in{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:12px 15px;font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+.brand-in:focus{border-color:var(--gbr);box-shadow:0 0 0 3px rgba(31,212,150,.08)}
+.brand-in::placeholder{color:var(--muted)}
+.scan-btn{padding:12px 24px;background:var(--g);color:#0a0c10;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.scan-btn:hover{background:#22e8aa;box-shadow:0 5px 20px rgba(31,212,150,.35);transform:translateY(-1px)}
+.examples{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px}
+.ex-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.ex-chip{font-size:12px;padding:3px 10px;background:var(--s2);border:1px solid var(--b2);border-radius:20px;color:var(--dim);cursor:pointer;transition:all .15s}
+.ex-chip:hover{border-color:var(--gbr);color:var(--g)}
+
+/* ── LOADING ── */
+#loading{display:none;animation:up .4s ease both}
+.load-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:36px 24px;text-align:center}
+.spinner{width:40px;height:40px;border:2.5px solid var(--b2);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-title{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;margin-bottom:5px}
+.load-sub{font-size:12px;color:var(--dim);margin-bottom:24px}
+.steps{display:inline-flex;flex-direction:column;gap:10px;text-align:left}
+.step{display:flex;align-items:center;gap:11px;font-size:12.5px;color:var(--muted);transition:color .4s}
+.step.on{color:var(--text);font-weight:600}
+.step.ok{color:var(--g)}
+.stepn{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;flex-shrink:0;transition:all .4s}
+.step.ok .stepn{background:var(--g);border-color:var(--g);color:#0a0c10}
+
+/* ── RESULT ── */
+#result{display:none}
+
+/* Brand header */
+.brand-hd{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;gap:14px;animation:up .5s ease both}
+.brand-ico{width:50px;height:50px;border-radius:11px;background:white;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.brand-cat{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.brand-nm{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:7px}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;padding:2px 8px;border-radius:4px}
+.tg{background:var(--gdim);color:var(--g);border:1px solid var(--gbr)}
+.ta{background:var(--adim);color:var(--a);border:1px solid var(--abr)}
+.tr{background:var(--rdim);color:var(--r);border:1px solid var(--rbr)}
+.tb{background:var(--bdim);color:var(--b);border:1px solid var(--bbr)}
+.tm{background:var(--s2);color:var(--muted);border:1px solid var(--b1)}
+
+/* Verdict */
+.verdict{border-radius:14px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;margin-bottom:12px;animation:up .5s ease .05s both}
+.verdict.yes{background:linear-gradient(135deg,rgba(31,212,150,.09),rgba(31,212,150,.03));border:1px solid var(--gbr)}
+.verdict.maybe{background:linear-gradient(135deg,rgba(245,166,35,.09),rgba(245,166,35,.03));border:1px solid var(--abr)}
+.verdict.no{background:linear-gradient(135deg,rgba(240,98,90,.09),rgba(240,98,90,.03));border:1px solid var(--rbr)}
+.verdict-ico{font-size:28px;flex-shrink:0}
+.verdict-h{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;margin-bottom:5px}
+.verdict-t{font-size:12.5px;color:var(--dim);line-height:1.7}
+
+/* ── SOCIAL METRICS (main feature) ── */
+.social-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px 20px;margin-bottom:12px;animation:up .5s ease .1s both}
+.card-hd{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+
+.social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.social-item{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:14px 12px;text-align:center;transition:border-color .2s}
+.social-item:hover{border-color:var(--b2)}
+.social-platform{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:5px}
+.social-platform .pip{width:7px;height:7px;border-radius:50%}
+.pip-line{background:var(--line)}
+.pip-fb{background:var(--fb)}
+.pip-ig{background:var(--ig)}
+.platform-name-line{color:var(--line)}
+.platform-name-fb{color:var(--fb)}
+.platform-name-ig{color:var(--ig)}
+
+.social-num{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;line-height:1;margin-bottom:4px}
+.num-ok{color:var(--g)}
+.num-mid{color:var(--a)}
+.num-lo{color:var(--muted)}
+.num-na{color:var(--muted);font-size:16px}
+
+.social-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:8px}
+.social-badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;border-radius:20px;display:inline-block}
+.badge-ok{background:var(--gdim);color:var(--g);border:1px solid var(--gbr)}
+.badge-mid{background:var(--adim);color:var(--a);border:1px solid var(--abr)}
+.badge-lo{background:var(--s3);color:var(--muted);border:1px solid var(--b1)}
+
+/* Activity row */
+.activity-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.act-item{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:11px 12px}
+.act-platform{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.act-val{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:2px}
+.act-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.act-ok{color:var(--g)}
+.act-mid{color:var(--a)}
+.act-lo{color:var(--muted)}
+
+/* Qual checklist */
+.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.qi{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:var(--s2);border:1px solid var(--b1);font-size:11.5px}
+.qi.pass{border-color:var(--gbr)}.qi.fail{border-color:var(--rbr)}.qi.unknown{border-color:var(--abr)}
+.qico{font-size:13px;flex-shrink:0}
+.ql{flex:1;line-height:1.3}
+.ql small{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-top:1px}
+.qs{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;padding:2px 6px;border-radius:20px;flex-shrink:0}
+.sq-g{background:var(--gdim);color:var(--g)}
+.sq-r{background:var(--rdim);color:var(--r)}
+.sq-a{background:var(--adim);color:var(--a)}
+
+/* Two col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;animation:up .5s ease .2s both}
+.mini{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 16px}
+.blist{list-style:none}
+.blist li{font-size:12px;padding:5px 0;border-bottom:1px solid var(--b1);display:flex;gap:7px;line-height:1.5;color:var(--dim)}
+.blist li:last-child{border-bottom:none}
+.blist li::before{flex-shrink:0;font-size:8px;margin-top:4px}
+.pros li::before{content:'◆';color:var(--g)}
+.risks li::before{content:'◇';color:var(--a)}
+
+/* Email section */
+.email-card{background:var(--s1);border:1px solid var(--gbr);border-radius:14px;padding:18px 20px;margin-bottom:14px;animation:up .5s ease .25s both;position:relative;overflow:hidden}
+.email-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),transparent)}
+.email-tabs{display:flex;gap:4px;background:var(--s2);border-radius:8px;padding:3px;margin-bottom:14px}
+.etab{flex:1;padding:7px;border:none;border-radius:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;cursor:pointer;transition:all .2s}
+.etab.on{background:var(--g);color:#0a0c10}
+.etab.off{background:transparent;color:var(--muted)}
+.email-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:10px}
+.email-subj{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g);margin-bottom:10px;display:flex;gap:6px}
+.email-subj span{color:var(--muted);flex-shrink:0}
+.email-body{font-size:12.5px;line-height:1.95;color:var(--dim);white-space:pre-line}
+.evar{background:rgba(31,212,150,.15);color:var(--g);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px}
+.email-acts{display:flex;gap:7px;margin-top:12px}
+.btn-p{padding:8px 16px;background:var(--g);color:#0a0c10;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s}
+.btn-p:hover{background:#22e8aa;transform:translateY(-1px)}
+.btn-g{padding:8px 16px;background:transparent;color:var(--dim);border:1px solid var(--b2);border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s}
+.btn-g:hover{color:var(--text);background:var(--s2)}
+.ab-hint{background:rgba(245,166,35,.07);border:1px solid var(--abr);border-radius:8px;padding:9px 12px;margin-top:10px;font-size:11px;color:var(--a);font-family:'JetBrains Mono',monospace}
+
+.reset-row{animation:up .5s ease .3s both}
+.reset-btn{width:100%;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--b1);border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s}
+.reset-btn:hover{color:var(--text);background:var(--s1)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--text);color:var(--bg);padding:9px 18px;border-radius:10px;font-size:12px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.disc{margin-top:28px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-align:center;line-height:1.8}
+
+@media(max-width:600px){
+  header{padding:0 16px}
+  .page{padding:28px 14px 70px}
+  .social-grid,.activity-row,.qual-grid,.two{grid-template-columns:1fr 1fr}
+  .hstatus span:not(.hpill){display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logo-mark">🎯</div><div class="logo-name">Omni<em>Scout</em></div></div>
+  <div class="hstatus"><span>品牌開發篩選機器人</span><div class="hpill"><span class="dot"></span><span id="sts">未設定 Key</span></div></div>
+</header>
+
+<div class="page">
+
+  <!-- KEY -->
+  <div class="key-box" id="keyBox">
+    <h3>⚙️ 第一次使用：輸入 Anthropic API Key</h3>
+    <p>前往 <code>console.anthropic.com/settings/keys</code> 建立你的 Key。<br>Key 只存在瀏覽器本機，完全私密，不經過任何伺服器。</p>
+    <div class="key-row">
+      <input class="key-in" id="keyIn" type="password" placeholder="sk-ant-api03-..." autocomplete="off" onkeydown="if(event.key==='Enter')saveKey()">
+      <button class="key-save" onclick="saveKey()">儲存</button>
+    </div>
+  </div>
+  <div class="key-bar" id="keyBar">
+    <div class="key-val">🔑 <span id="keyShow"></span></div>
+    <button class="key-clr" onclick="clearKey()">更換</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">陌生開發篩選工具</div>
+    <h1 class="hero-h">品牌社群數據<br><span class="ac">一秒篩選開發價值</span></h1>
+    <p class="hero-p">輸入品牌名稱，AI 自動搜尋 LINE、FB、IG 粉絲數與社群活躍度，依 Omnichat 開發條件自動篩選，並生成 A/B 兩版客製化開發信。</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-card">
+    <div class="input-label">輸入品牌名稱或官網</div>
+    <div class="input-row">
+      <input class="brand-in" id="brandIn" type="text" placeholder="例：LATIV、屈臣氏、Cama Café、城市商旅..." onkeydown="if(event.key==='Enter')go()">
+      <button class="scan-btn" onclick="go()">開始篩選 →</button>
+    </div>
+    <div class="examples">
+      <span class="ex-lbl">快速範例：</span>
+      <span class="ex-chip" onclick="setEx('LATIV')">LATIV</span>
+      <span class="ex-chip" onclick="setEx('屈臣氏')">屈臣氏</span>
+      <span class="ex-chip" onclick="setEx('Cama Café')">Cama Café</span>
+      <span class="ex-chip" onclick="setEx('城市商旅')">城市商旅</span>
+      <span class="ex-chip" onclick="setEx('86小舖')">86小舖</span>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading">
+    <div class="load-card">
+      <div class="spinner"></div>
+      <div class="load-title" id="loadTitle">正在篩選...</div>
+      <div class="load-sub">AI 搜尋品牌社群數據與活躍度中</div>
+      <div class="steps">
+        <div class="step on" id="s1"><div class="stepn">1</div>搜尋品牌基本資訊與產業</div>
+        <div class="step" id="s2"><div class="stepn">2</div>搜尋 LINE OA 粉絲數與活躍度</div>
+        <div class="step" id="s3"><div class="stepn">3</div>搜尋 FB / IG 粉絲數與發文頻率</div>
+        <div class="step" id="s4"><div class="stepn">4</div>評分篩選，生成 A/B 開發信</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result">
+
+    <!-- Brand -->
+    <div class="brand-hd">
+      <div class="brand-ico" id="rico">🏷</div>
+      <div style="flex:1">
+        <div class="brand-cat" id="rcat"></div>
+        <div class="brand-nm" id="rnm"></div>
+        <div class="tags" id="rtags"></div>
+      </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="verdict" id="rverdict">
+      <div class="verdict-ico" id="rvico">✅</div>
+      <div><div class="verdict-h" id="rvh"></div><div class="verdict-t" id="rvt"></div></div>
+    </div>
+
+    <!-- SOCIAL METRICS -->
+    <div class="social-card">
+      <div class="card-hd">社群數據 · 搜尋結果</div>
+
+      <!-- Follower counts -->
+      <div class="social-grid" id="socialGrid"></div>
+
+      <!-- Activity -->
+      <div class="card-hd" style="margin-top:14px">社群活躍度</div>
+      <div class="activity-row" id="activityRow"></div>
+    </div>
+
+    <!-- Qual checklist -->
+    <div class="social-card" style="animation-delay:.15s">
+      <div class="card-hd">開發條件核查</div>
+      <div class="qual-grid" id="qualGrid"></div>
+    </div>
+
+    <!-- Pros/Risks -->
+    <div class="two">
+      <div class="mini"><div class="card-hd">開發優勢</div><ul class="blist pros" id="rpros"></ul></div>
+      <div class="mini"><div class="card-hd">待確認 / 風險</div><ul class="blist risks" id="rrisks"></ul></div>
+    </div>
+
+    <!-- Email A/B -->
+    <div class="email-card">
+      <div class="card-hd" style="color:var(--g);margin-bottom:8px">客製化開發信 · A/B 兩版</div>
+      <div class="email-tabs">
+        <button class="etab on" id="tabA" onclick="swEmail('A')">版本 A · 數據導向</button>
+        <button class="etab off" id="tabB" onclick="swEmail('B')">版本 B · 故事導向</button>
+      </div>
+      <div id="panA">
+        <div class="email-meta" id="metaA"></div>
+        <div class="email-subj"><span>主旨：</span><span id="subjA"></span></div>
+        <div class="email-body" id="bodyA"></div>
+        <div class="email-acts"><button class="btn-p" onclick="cpA()">📋 複製版本 A</button><button class="btn-g" onclick="exportAll()">↓ 匯出</button></div>
+      </div>
+      <div id="panB" style="display:none">
+        <div class="email-meta" id="metaB"></div>
+        <div class="email-subj"><span>主旨：</span><span id="subjB"></span></div>
+        <div class="email-body" id="bodyB"></div>
+        <div class="ab-hint">💡 建議先發版本 A，若 3 天無回覆再發版本 B</div>
+        <div class="email-acts"><button class="btn-p" onclick="cpB()">📋 複製版本 B</button><button class="btn-g" onclick="exportAll()">↓ 匯出</button></div>
+      </div>
+    </div>
+
+    <div class="reset-row"><button class="reset-btn" onclick="resetAll()">← 篩選另一個品牌</button></div>
+  </div>
+
+  <div class="disc">⚠ 社群數據為 AI 搜尋公開資訊，數字僅供參考，實際以各平台為準。僅供 Omnichat 內部業務開發使用。</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let KEY = localStorage.getItem('omni_k') || '';
+
+function mask(k){ return k.length < 12 ? k : k.slice(0,10)+'••••••••'+k.slice(-4); }
+
+function saveKey(){
+  const v = document.getElementById('keyIn').value.trim();
+  if(!v || !v.startsWith('sk-')){ showToast('請輸入有效 Key（sk- 開頭）'); return; }
+  KEY = v; localStorage.setItem('omni_k', v);
+  document.getElementById('keyBox').style.display = 'none';
+  document.getElementById('keyBar').classList.add('on');
+  document.getElementById('keyShow').textContent = mask(v);
+  document.getElementById('sts').textContent = 'API Key 已設定';
+  showToast('✅ Key 已儲存！');
+}
+function clearKey(){
+  KEY = ''; localStorage.removeItem('omni_k');
+  document.getElementById('keyBar').classList.remove('on');
+  document.getElementById('keyBox').style.display = 'block';
+  document.getElementById('keyIn').value = '';
+  document.getElementById('sts').textContent = '未設定 Key';
+}
+window.addEventListener('load', ()=>{
+  if(KEY){ document.getElementById('keyBox').style.display='none'; document.getElementById('keyBar').classList.add('on'); document.getElementById('keyShow').textContent=mask(KEY); document.getElementById('sts').textContent='API Key 已設定'; }
+});
+
+function setEx(v){ document.getElementById('brandIn').value = v; document.getElementById('brandIn').focus(); }
+
+const SYSTEM = `你是 Omnichat 的資深業務顧問，專門篩選品牌開發潛力。
+
+Omnichat：Meta & LINE 官方認證技術夥伴，協助品牌整合社群與電商，提升顧客互動與轉換率。
+
+【核心任務：搜尋真實社群數據】
+使用 web_search 工具搜尋以下資訊：
+
+1. LINE 官方帳號粉絲數：
+   搜尋 "[品牌名] LINE 官方帳號 粉絲" 或 "[品牌名] line.me/R/ti/p/"
+   找出：是否有LINE OA、粉絲數（例：5.2萬）
+
+2. Facebook 粉絲數：
+   搜尋 "[品牌名] facebook 粉絲專頁"
+   找出：FB粉絲數、最近發文日期、發文頻率（每週幾次）
+
+3. Instagram 追蹤數：
+   搜尋 "[品牌名] instagram 追蹤"
+   找出：IG追蹤數、最近發文日期
+
+4. 品牌基本資料：
+   搜尋 "[品牌名] 官網" 找出：是否有電商、產業類別
+
+【開發判定條件】
+必要三項全中→ verdict:yes：
+1. 有電商官網
+2. 有LINE官方帳號
+3. LINE粉絲 1,000+
+加分：FB粉絲5,000+、FB每週發文2次以上、IG追蹤1,000+、有行銷活動記錄
+
+【粉絲數顯示格式】
+- 1,000以下：顯示實際數字，例："850"
+- 1,000-10,000：顯示"3.2萬"或"8,500"
+- 1萬以上：顯示"12.3萬"
+- 找不到：顯示"未知"
+- 無帳號：顯示"無"
+
+【活躍度判定】
+- 高：每週發文3次以上，近期有互動
+- 中：每週1-2次發文
+- 低：每月才發文，或超過30天沒發文
+- 未知：搜不到資料
+
+【開發信四大升級】
+1. 依產業話術（服飾/餐飲/旅遊/美妝/居家/零售/其他）
+2. 依LINE粉絲規模（startup<5k/growth5k-30k/mature>30k）
+3. A版：數據導向，引用搜尋到的真實粉絲數字
+4. B版：故事導向，以同業痛點開頭
+
+回傳純JSON不含其他文字：
+{
+  "brandName": "品牌名稱",
+  "category": "產業英文大寫，例：FASHION · E-COMMERCE",
+  "industry": "服飾|餐飲|旅遊|美妝|居家|零售|其他",
+  "emoji": "代表emoji",
+  "tags": [{"text":"標籤","type":"g|a|r|b|m"}],
+  "verdict": "yes|maybe|no",
+  "verdictTitle": "建議開發|有條件開發|暫不建議開發",
+  "verdictReason": "2-3句具體理由，引用找到的數字",
+  "social": {
+    "line": {
+      "hasOA": true,
+      "followers": "數字字串，例：5.2萬 或 未知 或 無",
+      "followersRaw": 52000,
+      "activity": "高|中|低|未知",
+      "activityDetail": "每週發文頻率說明"
+    },
+    "fb": {
+      "hasPage": true,
+      "followers": "數字字串",
+      "followersRaw": 0,
+      "activity": "高|中|低|未知",
+      "activityDetail": "最近發文說明",
+      "lastPostDays": 0
+    },
+    "ig": {
+      "hasAccount": true,
+      "followers": "數字字串",
+      "followersRaw": 0,
+      "activity": "高|中|低|未知",
+      "activityDetail": "發文狀況"
+    }
+  },
+  "qualifications": [
+    {"label":"有電商/官網銷售","detail":"說明","status":"pass|fail|unknown"},
+    {"label":"LINE 官方帳號","detail":"說明","status":"pass|fail|unknown"},
+    {"label":"LINE 粉絲 1,000+","detail":"實際數字","status":"pass|fail|unknown"},
+    {"label":"FB 粉絲 5,000+","detail":"實際數字","status":"pass|fail|unknown"},
+    {"label":"FB 定期發文","detail":"頻率說明","status":"pass|fail|unknown"},
+    {"label":"有行銷活動記錄","detail":"說明","status":"pass|fail|unknown"}
+  ],
+  "pros": ["優勢1（含具體數字）","優勢2","優勢3"],
+  "risks": ["風險1","風險2"],
+  "lineFollowerTier": "startup|growth|mature",
+  "emailA": {
+    "targetRole": "適合對象",
+    "subject": "主旨（含品牌真實數字，不超過35字）",
+    "body": "150-200字，A版數據導向，引用搜到的粉絲數字，含{{姓名}}{{公司名}}{{時段}}變數"
+  },
+  "emailB": {
+    "targetRole": "適合對象",
+    "subject": "主旨（故事導向，不超過35字）",
+    "body": "150-200字，B版以同業痛點故事開頭，結尾加：建議先發版本A，3天無回覆再發版本B"
+  }
+}`;
+
+async function go(){
+  if(!KEY){ showToast('⚠️ 請先設定 API Key'); document.getElementById('keyBox').style.display='block'; document.getElementById('keyIn').focus(); return; }
+  const brand = document.getElementById('brandIn').value.trim();
+  if(!brand){ showToast('請輸入品牌名稱'); return; }
+
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('loadTitle').textContent = `正在篩選「${brand}」...`;
+  animSteps();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        system: SYSTEM,
+        messages: [{ role: 'user', content: `請搜尋並分析品牌「${brand}」：\n1. 用web_search搜尋LINE OA粉絲數、FB粉絲數、IG追蹤數和社群活躍度\n2. 評估是否適合Omnichat開發\n3. 生成A/B兩版依產業客製化開發信（A版引用真實數字）\n回傳純JSON。` }],
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }]
+      })
+    });
+
+    if(!res.ok){ const e = await res.json(); throw new Error(e.error?.message || `HTTP ${res.status}`); }
+    const data = await res.json();
+    const allText = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const m = allText.match(/\{[\s\S]*\}/);
+    if(!m) throw new Error('解析失敗，請重試');
+    render(JSON.parse(m[0]), brand);
+  } catch(err) {
+    console.error(err);
+    showToast('❌ ' + err.message);
+    document.getElementById('loading').style.display = 'none';
+  }
+}
+
+function animSteps(){
+  ['s1','s2','s3','s4'].forEach((id,i) => { const el=document.getElementById(id); el.className='step'; el.querySelector('.stepn').textContent=i+1; });
+  document.getElementById('s1').className = 'step on';
+  ['s2','s3','s4'].forEach((id,i) => {
+    setTimeout(() => {
+      document.getElementById(['s1','s2','s3'][i]).className = 'step ok';
+      document.getElementById(['s1','s2','s3'][i]).querySelector('.stepn').textContent = '✓';
+      document.getElementById(id).className = 'step on';
+    }, (i+1)*1100);
+  });
+}
+
+function fmtFollowers(raw, str){
+  if(!str || str === '未知' || str === '無') return { display: str||'未知', cls: 'num-na' };
+  const n = raw || 0;
+  const cls = n >= 30000 ? 'num-ok' : n >= 5000 ? 'num-mid' : n >= 1000 ? 'num-mid' : 'num-lo';
+  return { display: str, cls };
+}
+
+function actBadge(act){
+  if(act === '高') return '<span class="social-badge badge-ok">高活躍</span>';
+  if(act === '中') return '<span class="social-badge badge-mid">中活躍</span>';
+  return '<span class="social-badge badge-lo">低活躍</span>';
+}
+
+const SM = { pass:{i:'✅',c:'sq-g',l:'符合'}, fail:{i:'❌',c:'sq-r',l:'不符合'}, unknown:{i:'❓',c:'sq-a',l:'待確認'} };
+
+function render(d, input){
+  setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+
+    // Brand
+    document.getElementById('rico').textContent = d.emoji || '🏷';
+    document.getElementById('rcat').textContent = d.category || 'BRAND';
+    document.getElementById('rnm').textContent = d.brandName || input;
+    const tagCls = {g:'tg',a:'ta',r:'tr',b:'tb',m:'tm'};
+    document.getElementById('rtags').innerHTML = (d.tags||[]).map(t => `<span class="tag ${tagCls[t.type]||'tm'}">${t.text}</span>`).join('');
+
+    // Verdict
+    const vmap = {yes:'✅',maybe:'🤔',no:'⛔'};
+    document.getElementById('rverdict').className = `verdict ${d.verdict||'maybe'}`;
+    document.getElementById('rvico').textContent = vmap[d.verdict]||'🤔';
+    document.getElementById('rvh').textContent = d.verdictTitle || '';
+    document.getElementById('rvt').textContent = d.verdictReason || '';
+
+    // Social metrics
+    const s = d.social || {};
+    const line = s.line || {};
+    const fb = s.fb || {};
+    const ig = s.ig || {};
+
+    const lf = fmtFollowers(line.followersRaw, line.followers);
+    const fbf = fmtFollowers(fb.followersRaw, fb.followers);
+    const igf = fmtFollowers(ig.followersRaw, ig.followers);
+
+    document.getElementById('socialGrid').innerHTML = `
+      <div class="social-item">
+        <div class="social-platform"><span class="pip pip-line"></span><span class="platform-name-line">LINE OA</span></div>
+        <div class="social-num ${lf.cls}">${lf.display}</div>
+        <div class="social-label">粉絲數</div>
+        ${line.hasOA ? actBadge(line.activity) : '<span class="social-badge badge-lo">無帳號</span>'}
+      </div>
+      <div class="social-item">
+        <div class="social-platform"><span class="pip pip-fb"></span><span class="platform-name-fb">Facebook</span></div>
+        <div class="social-num ${fbf.cls}">${fbf.display}</div>
+        <div class="social-label">粉絲數</div>
+        ${fb.hasPage ? actBadge(fb.activity) : '<span class="social-badge badge-lo">無粉絲頁</span>'}
+      </div>
+      <div class="social-item">
+        <div class="social-platform"><span class="pip pip-ig"></span><span class="platform-name-ig">Instagram</span></div>
+        <div class="social-num ${igf.cls}">${igf.display}</div>
+        <div class="social-label">追蹤數</div>
+        ${ig.hasAccount ? actBadge(ig.activity) : '<span class="social-badge badge-lo">無帳號</span>'}
+      </div>`;
+
+    const actCls = a => a==='高'?'act-ok':a==='中'?'act-mid':'act-lo';
+    document.getElementById('activityRow').innerHTML = `
+      <div class="act-item">
+        <div class="act-platform"><span class="pip pip-line" style="width:6px;height:6px;border-radius:50%;display:inline-block"></span> LINE</div>
+        <div class="act-val ${actCls(line.activity)}">${line.activity||'未知'}</div>
+        <div class="act-lbl">${line.activityDetail||'無資料'}</div>
+      </div>
+      <div class="act-item">
+        <div class="act-platform"><span class="pip pip-fb" style="width:6px;height:6px;border-radius:50%;display:inline-block"></span> Facebook</div>
+        <div class="act-val ${actCls(fb.activity)}">${fb.activity||'未知'}</div>
+        <div class="act-lbl">${fb.activityDetail||'無資料'}</div>
+      </div>
+      <div class="act-item">
+        <div class="act-platform"><span class="pip pip-ig" style="width:6px;height:6px;border-radius:50%;display:inline-block"></span> Instagram</div>
+        <div class="act-val ${actCls(ig.activity)}">${ig.activity||'未知'}</div>
+        <div class="act-lbl">${ig.activityDetail||'無資料'}</div>
+      </div>`;
+
+    // Qual
+    document.getElementById('qualGrid').innerHTML = (d.qualifications||[]).map(q => {
+      const s2 = SM[q.status]||SM.unknown;
+      return `<div class="qi ${q.status||'unknown'}"><span class="qico">${s2.i}</span><div class="ql">${q.label}<small>${q.detail||''}</small></div><span class="qs ${s2.c}">${s2.l}</span></div>`;
+    }).join('');
+
+    // Pros/Risks
+    document.getElementById('rpros').innerHTML = (d.pros||[]).map(p=>`<li>${p}</li>`).join('');
+    document.getElementById('rrisks').innerHTML = (d.risks||[]).map(r=>`<li>${r}</li>`).join('');
+
+    // Emails
+    const eA = d.emailA || {};
+    document.getElementById('metaA').textContent = '📌 ' + (eA.targetRole||'');
+    document.getElementById('subjA').textContent = eA.subject || '';
+    document.getElementById('bodyA').innerHTML = (eA.body||'').replace(/\{\{([^}]+)\}\}/g,'<span class="evar">{{$1}}</span>');
+    const eB = d.emailB || {};
+    document.getElementById('metaB').textContent = '📌 ' + (eB.targetRole||'');
+    document.getElementById('subjB').textContent = eB.subject || '';
+    document.getElementById('bodyB').innerHTML = (eB.body||'').replace(/\{\{([^}]+)\}\}/g,'<span class="evar">{{$1}}</span>');
+
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 4500);
+}
+
+function swEmail(v){
+  const isA = v==='A';
+  document.getElementById('panA').style.display = isA?'block':'none';
+  document.getElementById('panB').style.display = isA?'none':'block';
+  document.getElementById('tabA').className = 'etab '+(isA?'on':'off');
+  document.getElementById('tabB').className = 'etab '+(isA?'off':'on');
+}
+function cpA(){ cpText('主旨：'+document.getElementById('subjA').textContent+'\n\n'+document.getElementById('bodyA').textContent); showToast('✅ 版本 A 已複製！'); }
+function cpB(){ cpText('主旨：'+document.getElementById('subjB').textContent+'\n\n'+document.getElementById('bodyB').textContent); showToast('✅ 版本 B 已複製！'); }
+function exportAll(){
+  const name = document.getElementById('rnm').textContent;
+  const blob = new Blob([
+    'OmniScout 品牌篩選報告\n品牌：'+name+'\n判定：'+document.getElementById('rvh').textContent+'\n'+document.getElementById('rvt').textContent+
+    '\n\n━━━ 版本A ━━━\n主旨：'+document.getElementById('subjA').textContent+'\n\n'+document.getElementById('bodyA').textContent+
+    '\n\n━━━ 版本B ━━━\n主旨：'+document.getElementById('subjB').textContent+'\n\n'+document.getElementById('bodyB').textContent+
+    '\n\n💡 建議先發版本A，3天無回覆再發版本B'
+  ], {type:'text/plain;charset=utf-8'});
+  Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:'OmniScout_'+name+'.txt'}).click();
+  showToast('📄 報告已下載！');
+}
+function resetAll(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('loading').style.display='none';
+  document.getElementById('brandIn').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cpText(t){ navigator.clipboard?.writeText(t).catch(()=>{ const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta); }); }
+function showToast(msg){ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800); }
+</script>
+</body>
+</html>
